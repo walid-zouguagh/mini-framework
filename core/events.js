@@ -1,12 +1,3 @@
-// this._domEvents = [
-//             'click', 'dblclick', 'input', 'keydown', 'scroll',
-//             'mouseover', 'mouseout', 'change', 'submit',
-//             'keypress', 'keyup', 'blur', 'focus'
-//         ];
-
-
-
-
 // function Eventlistener(Element,event , callback){
 //     if (Element == "document"){
 //         document['on'+event] =  callback;
@@ -27,15 +18,29 @@
 // @private
 //     this._winOrDocEvents = ['resize', 'load', 'unload', 'beforeunload','hashchange', 'popstate', 'DOMContentLoaded'];
 
-
-// core/event.js
-
-// Global event registry
-const EventRegistry = {};  // Key: "elementId_event", Value: [callbacks]
-
+ 
+ 
+console.log("still here");
+const EventRegistry = {}; // Key: "elementId_eventType" → [handlers]
 let idCounter = 0;
 
-// Helper to get or assign a unique ID to any element
+// Events your framework supports
+const SupportedEvents = [
+  "click",
+  "dblclick",
+  "input",
+  "keydown",
+  "scroll",
+  "mouseover",
+  "mouseout",
+  "change",
+  "submit",
+  "keypress",
+  "keyup",
+  "blur",
+  "focus",
+];
+
 function getElementId(element) {
   if (!element.dataset.eventId) {
     element.dataset.eventId = `eid_${++idCounter}`;
@@ -43,11 +48,14 @@ function getElementId(element) {
   return element.dataset.eventId;
 }
 
-// Main function to register an event
 export function EventListener(target, eventType, callback) {
+  if (!SupportedEvents.includes(eventType)) {
+    console.warn(`[EventListener] Unsupported event type: ${eventType}`);
+    return;
+  }
+
   let element = null;
 
-  // Resolve the target element
   if (typeof target === "string") {
     if (target === "document") {
       element = document;
@@ -65,22 +73,19 @@ export function EventListener(target, eventType, callback) {
     return;
   }
 
-  // Assign or get element ID
   const elementId = getElementId(element);
   const registryKey = `${elementId}_${eventType}`;
 
-  // If it's the first handler for this element+eventType, set the dispatcher
   if (!EventRegistry[registryKey]) {
     EventRegistry[registryKey] = [];
 
-    // This is our single, internal dispatcher function
+    // Set up internal dispatcher
     element[`on${eventType}`] = function (event) {
-      EventRegistry[registryKey].forEach(handler => {
+      EventRegistry[registryKey].forEach((handler) => {
         handler.call(element, event);
       });
     };
   }
 
-  // Store the handler
   EventRegistry[registryKey].push(callback);
 }
