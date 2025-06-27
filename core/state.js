@@ -1,27 +1,30 @@
 // Create function the useState
 let states = []; // ["walid"]
-let stateIndex = null;// 
-// let stateIndex = 0;
+// let stateIndex = null;// 
+let stateIndex = 0;
 
 function useState(initialValue){ // "walid"
     const currentIndex = stateIndex; // null //                     // true             false
 
-    states[currentIndex] = states[currentIndex] !== undefined ? states[currentIndex] : initialValue; // walid
+    // states[currentIndex] = states[currentIndex] !== undefined ? states[currentIndex] : initialValue; // walid
+    if (states[currentIndex] === undefined){
+        states[currentIndex] = initialValue;
+    }
     // const [name, setName] = useState(value)
     function setstate(newValue){
         states[currentIndex] = newValue;
         render();
     }
-    stateIndex = stateIndex ? 0 : stateIndex++; 
-    // stateIndex++ //= currentIndex ? 0 : currentIndex++; 
+    // stateIndex = stateIndex ? 0 : stateIndex++; 
+    stateIndex++;
     return [states[currentIndex], setstate];
 }
 
 // Create function the useEffect
 // useEffect(callfunction(), [name])
 let effects = [];
-let effectIndex = null;
-// let effectIndex = 0;
+// let effectIndex = null;
+let effectIndex = 0;
 function useEffect(callback, dependencies){
     const oldDependencies = effects[effectIndex];
     let hasChanged = true;
@@ -34,16 +37,17 @@ function useEffect(callback, dependencies){
         callback();
     }
     effects[effectIndex] = dependencies;
-    effectIndex = effectIndex ? 0 : effectIndex++;
-    // effectIndex++;
+    // effectIndex = effectIndex ? 0 : effectIndex++;
+    effectIndex++;
 }
 
-function jsx(tags, props, ...children){
-    if (typeof tag == "function"){
-        return {...props, children}
+function jsx(tag, props, ...children) {
+    if (typeof tag === "function") {
+        return tag({ ...props, children });
     }
-    return {tags, props:props || {}, children}
+    return { tag, props: props || {}, children };
 }
+
 
 function createElement(node){
     if (typeof node === "string" || typeof node === "number"){
@@ -70,7 +74,6 @@ function createElement(node){
         }
     }
     return element;
-    
 }
 
 function render(){
