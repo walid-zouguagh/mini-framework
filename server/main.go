@@ -1,4 +1,5 @@
 package main
+
 import (
 	"fmt"
 	"html/template"
@@ -16,7 +17,7 @@ func main() {
 		}
 		tmp.Execute(w, nil)
 	})))
-	http.HandleFunc("/src/", HandelPics)
+	http.HandleFunc("/core/", HandelPics)
 	fmt.Println("the server is up")
 	http.ListenAndServe(":8000", nil)
 }
@@ -28,7 +29,7 @@ func HandelPics(w http.ResponseWriter, r *http.Request) {
 	// }
 	fmt.Println("---------------------", r.URL.Path)
 	path := r.URL.Path
-	validpath := strings.TrimPrefix(r.URL.Path, "/src/")
+	validpath := strings.TrimPrefix(r.URL.Path, "/core/")
 	// validpath = strings.TrimPrefix(r.URL.Path, "/defaultIMG/")
 	if validpath == "" {
 		// utils.WriteJSON(w, map[string]string{"error": "Forbidden"}, http.StatusForbidden)

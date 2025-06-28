@@ -1,4 +1,4 @@
-import { createHTML } from "./dom";
+import { createHTML } from "./dom.js";
 
 
 
@@ -59,16 +59,21 @@ const diff=(OldVdom,NewVdom)=>{
 }
 export function htmlToObject(element) {
   if (element.nodeType === Node.TEXT_NODE && element.textContent.trim() === '') {
-    return null; 
+    return null;  
   }
 
   const obj = {
     tag: element.tagName.toLowerCase(),
     attrs: {},
+    textContent:element.textContent,
+   
   };
 
-  for (let attr of element.attributes || []) {
-    obj.attrs[attr.name] = attr.value;
+  
+
+  for (let attr of element.attributes || []) {        
+
+    obj.attrs[attr.name] = attr.value;                 
   }
 
   if (element.children.length > 0) {
