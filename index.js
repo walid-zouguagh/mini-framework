@@ -1,4 +1,5 @@
-import { htmlToObject } from "./core/diffing.js";
+import {htmlToObject } from "./core/Vdom/create.js"
+import { objectToHTML } from "./core/Vdom/render.js";
 
 // console.log("hihi");
 
@@ -16,11 +17,15 @@ import { createHTML } from "./core/dom.js";
 // `;
 
 const root = document.getElementById("root")
-const element = createHTML("div", { className: "div", textContent: "hello" })
+const element = createHTML("div", { className: "div"},document.createTextNode('hi dear'))
 root.appendChild(element)
 console.log(root);
 
-console.log(htmlToObject(root));
+const objet = (htmlToObject(root));
+console.log(objet);
+console.log(objectToHTML(objet));
+
+
 
 // root.append(element)
 // const parser = new DOMParser();

@@ -1,12 +1,23 @@
-export function createHTML(tag, atri, ...children) {
-    const element = document.createElement(tag);
-    //   const [key, value] = Object.entries(atri);
+export function createHTML(tag, attrs, ...children) {
+  const el = document.createElement(tag);
 
-    for (const key in atri) {
-        // console.log(key, atri[key]);
-        element[key] = atri[key];
+  // Appliquer les attributs
+  for (const [key, value] of Object.entries(attrs)) {
+    el.setAttribute(key, value);
+  }
+
+  // Ajouter les enfants
+  for (const child of children) {
+    if (typeof child === "string"){
+    const TextNod = document.createTextNode(child)
+    el.appendChild(TextNod)
+    return
     }
-    //   console.log(element);
-    element.append(...children)
-    return element;
+
+    
+    el.appendChild(child);
+  }
+
+  return el;
 }
+
