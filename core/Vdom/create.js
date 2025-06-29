@@ -1,4 +1,5 @@
 export function htmlToObject(element) {
+  
   if (element.nodeType === Node.TEXT_NODE && element.textContent.trim() === '') {
     return null;
   }
