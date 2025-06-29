@@ -1,7 +1,7 @@
 import { jsx } from "react/jsx-runtime";
 
 export default function NotFound() {
-  return DOM.Jsx(
+  return jsx(
     "div",
     { className: "container" },
     jsx(

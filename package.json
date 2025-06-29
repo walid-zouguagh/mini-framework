@@ -7,21 +7,25 @@
     "doc": "docs",
     "example": "examples"
   },
+
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "start": "node index.js",
+  "dev": "nodemon index.js"
+},
   "repository": {
     "type": "git",
-    "url": "https://github.com/walid-zouguagh/mini-framework.git"
+    "url": "git+https://github.com/walid-zouguagh/mini-framework.git"
   },
   "keywords": [
     "mini-frameword"
   ],
-  "author": [
-    "walid zouguagh",
-    "ayoub draoui",
-    "zakaria bassadou",
-    "anouar boutamgharin"
-  ],
-  "license": "ISC"
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/walid-zouguagh/mini-framework/issues"
+  },
+  "homepage": "https://github.com/walid-zouguagh/mini-framework#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
 }
