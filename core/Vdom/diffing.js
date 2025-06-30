@@ -10,13 +10,13 @@ export function diff(oldNode, newNode) {
   const patches = [];
 
   walk(oldNode, newNode, patches, 0);
-
+   
   return patches;
 }
 function walk(oldNode, newNode, patches, index) {
   const currentPatch = [];
-
-  if (!newNode) {
+           
+  if (!newNode) {                                                   
     currentPatch.push({ type: 'REMOVE', index });
   } else if (!oldNode) {
     currentPatch.push({ type: 'ADD', newNode });
@@ -48,7 +48,7 @@ function diffAttrs(oldAttrs = {}, newAttrs = {}) {
   // Changements ou ajouts
   for (let key in newAttrs) {
     if (newAttrs[key] !== oldAttrs[key]) {
-      patches[key] = newAttrs[key];
+      patches[key] = newAttrs[key]; 
     }
   }
 
