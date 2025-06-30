@@ -1,6 +1,5 @@
 import { createHTML } from "../dom.js";
 
-
 //Tu le rends en vrai DOM avec render()
 
 export function objectToHTML(vNode) {

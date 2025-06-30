@@ -1,43 +1,58 @@
 import {htmlToObject } from "./core/Vdom/create.js"
-import { objectToHTML } from "./core/Vdom/render.js";
 import { diff } from "./core/Vdom/diffing.js";
+import {  patch } from "./core/Vdom/patch.js";
+import { objectToHTML } from "./core/Vdom/render.js";
 
-// console.log("hihi");
+console.log("🌱 Démarrage du Virtual DOM test...");
 
-import { createHTML } from "./core/dom.js";
+// Récupère l'élément réel existant dans le HTML
+const root = document.getElementById("root");
 
-const root1 = document.getElementById("root")
-const root2 = document.getElementById("root2")
+console.log("✅ DOM initial:", root);
 
-const obj1= htmlToObject(root1);
-const obj2=htmlToObject(root2)
-console.log(diff(obj1,obj2));
+// 1️⃣ Convertit en Virtual DOM
+const oldTree = htmlToObject(root);
+console.log("✅ oldTree (Virtual DOM) :", oldTree);
 
+// // 2️⃣ Crée un nouveau Virtual DOM
+// // Ici tu peux changer ce que tu veux tester
+const newTree = {
+  tag: "div",
+  attrs: { id: "app" },
+  children: [
+    {
+      tag: "h2",
+      attrs: { class: "title" },
+      children: [
+        { type: "text", content: "Hello Virtual DOM!" }
+      ]
+    },
+    {
+      tag: "p",
+      attrs: { class: "description" },
+      children: [
+        { type: "text", content: "Ceci est un test." }
+      ]
+    }
+  ]
+};
 
- 
- 
- 
- 
+console.log("✅ newTree (Virtual DOM) :", newTree);
 
+// // 3️⃣ Diff
+const patches = diff(oldTree, newTree);
+console.log("✅ Patches calculés :", patches);
 
-const element = createHTML("div", { className: "div"},document.createTextNode('hi dear'))
-// root.appendChild(element)
-// console.log(root);
+// // 4️⃣ Applique les changements sur le vrai DOM
+// // IMPORTANT: réinitialiser l'index global
+globalThis.globalDomIndex = 0;
+patch(root, patches);
 
-// const objet = (htmlToObject(root));
-// console.log(objet);
-// console.log(objectToHTML(objet));
+console.log("✅ Changements appliqués !");
 
+// 5️⃣ Affiche le résultat final
+console.log("✅ DOM après patch :", root);
 
-
-// root.append(element)
-// const parser = new DOMParser();
-// const doc = parser.parseFromString(root, 'text/html');
-// console.log(doc);
-
-
-// const result = htmlToObject(doc.documentElement);
-// console.log(JSON.stringify(result, null, 2));
-
-
-
+// 6️⃣ Si tu veux, reconstruire le DOM complet à partir du Virtual DOM
+const freshNode = objectToHTML(newTree);
+document.body.appendChild(freshNode);

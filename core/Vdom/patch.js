@@ -1,6 +1,8 @@
+import { objectToHTML } from "./render.js";
+
 let globalDomIndex = 0;
 
-function patch(node, patches) {
+export function patch(node, patches) {
   walkPatch(node, patches);
 }
 
@@ -38,11 +40,11 @@ function applyPatches(node, changes) {
         node.parentNode.removeChild(node);
         break;
       case 'ADD':
-        const newNode = render(change.newNode);
+        const newNode = objectToHTML(change.newNode);
         node.appendChild(newNode);
         break;
       case 'REPLACE':
-        const replacedNode = render(change.newNode);
+        const replacedNode = objectToHTML(change.newNode);
         node.parentNode.replaceChild(replacedNode, node);
         break;
     }
