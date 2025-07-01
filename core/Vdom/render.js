@@ -1,6 +1,5 @@
 import { createHTML } from "../dom.js";
 
-//Tu le rends en vrai DOM avec render()
 
 export function objectToHTML(vNode) {
   if (vNode.type === 'text') {
@@ -8,5 +7,5 @@ export function objectToHTML(vNode) {
   }
 
   const children = (vNode.children || []).map(objectToHTML);
-  return createHTML(vNode.tag, vNode.attrs || {}, ...children);
+  return createHTML(vNode.tag, vNode.attrs || {}, ...children); 
 }

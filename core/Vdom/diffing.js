@@ -1,88 +1,74 @@
-export function diff(oldNode, newNode) {
-  const patches = [];
-  let index = 0; 
-
-  walk(oldNode, newNode, patches, index);
-
-
-
-  
-
-  return patches;
+export function diffAndApply(oldNode, newNode) {
+  walk(oldNode, newNode, null, null);
 }
 
-function walk(oldNode, newNode, patches, index) {
-  const currentPatch = [];
-  if (index == 3 ){
-    console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
-    console.log(oldNode,newNode);
-    
-    
-  }
-
+function walk(oldNode, newNode, parentNode, indexInParent) {
   if (!newNode) {
-    console.log("indexfinwssl",index);
-    console.log("node fin wassl",oldNode);
-    
-  
-    currentPatch.push({ type: "REMOVE", index });
-  } else if (!oldNode) {
-    currentPatch.push({ type: "ADD", newNode, index });
-  } else if (isTextNode(oldNode) && isTextNode(newNode)) {
+    // Supprimer ce nœud de son parent
+    if (parentNode && indexInParent !== null) {
+      parentNode.children.splice(indexInParent, 1);
+    }
+    return;
+  }
+
+  if (!oldNode) {
+    // Ajouter un nouveau nœud dans le parent
+    if (parentNode && indexInParent !== null) {
+      parentNode.children.splice(indexInParent, 0, newNode);
+    }
+    return;
+  }
+
+  if (isTextNode(oldNode) && isTextNode(newNode)) {
+    // Mettre à jour le contenu texte
     if (oldNode.content !== newNode.content) {
-      currentPatch.push({ type: "TEXT", content: newNode.content, index });
+      oldNode.content = newNode.content;
     }
-  } else if (oldNode.tag === newNode.tag) {
-    const attrPatches = diffAttrs(oldNode.attrs, newNode.attrs);
-    if (Object.keys(attrPatches).length > 0) {
-      currentPatch.push({ type: "ATTRS", attrs: attrPatches, index });
-    }
-
-    diffChildren(oldNode.children || [], newNode.children || [], patches, index);
-  } else {
-    currentPatch.push({ type: "REPLACE", newNode, index });
+    return;
   }
 
-  if (currentPatch.length > 0) {
-    patches.push({ index, changes: currentPatch });
+  if (oldNode.tag !== newNode.tag) {
+    // Remplacer entièrement ce nœud
+    if (parentNode && indexInParent !== null) {
+      parentNode.children[indexInParent] = newNode;
+    }
+    return;
   }
+
+  // Si le tag est le même, mettre à jour les attributs
+  updateAttrs(oldNode, newNode);
+
+  // Synchroniser les enfants récursivement
+  diffChildren(oldNode, newNode);
 }
 
 function isTextNode(node) {
   return node && node.type === "text";
 }
 
-function diffAttrs(oldAttrs = {}, newAttrs = {}) {
-  const patches = {};
+function updateAttrs(oldNode, newNode) {
+  oldNode.attrs = oldNode.attrs || {};
+  newNode.attrs = newNode.attrs || {};
 
-  for (const key in newAttrs) {
-    if (newAttrs[key] !== oldAttrs[key]) {
-      patches[key] = newAttrs[key];
-    }
+  // Mettre à jour ou ajouter les nouveaux attributs
+  for (const key in newNode.attrs) {
+    oldNode.attrs[key] = newNode.attrs[key];
   }
 
-  for (const key in oldAttrs) {
-    if (!(key in newAttrs)) {
-      patches[key] = null;
+  // Supprimer les attributs absents
+  for (const key in oldNode.attrs) {
+    if (!(key in newNode.attrs)) {
+      delete oldNode.attrs[key];
     }
   }
-
-  return patches;
 }
 
-function diffChildren(oldChildren, newChildren, patches, parentIndex) {
+function diffChildren(oldNode, newNode) {
+  const oldChildren = oldNode.children || [];
+  const newChildren = newNode.children || [];
   const maxLen = Math.max(oldChildren.length, newChildren.length);
 
-  
-  
-  let currentIndex = parentIndex;
-
   for (let i = 0; i < maxLen; i++) {
-    currentIndex++;
-
-    walk(oldChildren[i], newChildren[i], patches, currentIndex);
-
+    walk(oldChildren[i], newChildren[i], oldNode, i);
   }
 }
-
-
