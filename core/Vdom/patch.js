@@ -7,10 +7,18 @@ export function patch(node, patches) {
 }
 
 function walkPatch(node, patches) {
-  const currentPatches = patches.find(p => p.index === globalDomIndex);
+const currentPatches = patches.filter(p => p.index === globalDomIndex);
 
-  if (currentPatches) {
-    applyPatches(node, currentPatches.changes);
+  if (currentPatches) { 
+    currentPatches.map((currentPatche)=>{
+      console.log("currentPatche",currentPatche);
+      
+
+           applyPatches(node, currentPatche.changes);
+
+    })
+    
+
   }
 
   let childNodes = node.childNodes;
@@ -21,6 +29,9 @@ function walkPatch(node, patches) {
 }
 
 function applyPatches(node, changes) {
+  console.log("les changements",changes);
+  
+  
   changes.forEach(change => {
     switch (change.type) {
       case 'TEXT':
@@ -37,6 +48,8 @@ function applyPatches(node, changes) {
         }
         break;
       case 'REMOVE':
+        console.log("hi");
+        console.log("node que sera effaces",node.parentNode);
         node.parentNode.removeChild(node);
         break;
       case 'ADD':

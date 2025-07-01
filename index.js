@@ -7,8 +7,10 @@ console.log("🌱 Démarrage du Virtual DOM test...");
 
 // Récupère l'élément réel existant dans le HTML
 const root = document.getElementById("root");
+const first = root
+console.log("first",first);
 
-console.log("✅ DOM initial:", root);
+
 
 // 1️⃣ Convertit en Virtual DOM
 const oldTree = htmlToObject(root);

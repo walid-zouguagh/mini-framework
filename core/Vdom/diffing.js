@@ -4,13 +4,27 @@ export function diff(oldNode, newNode) {
 
   walk(oldNode, newNode, patches, index);
 
+
+
+  
+
   return patches;
 }
 
 function walk(oldNode, newNode, patches, index) {
   const currentPatch = [];
+  if (index == 3 ){
+    console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
+    console.log(oldNode,newNode);
+    
+    
+  }
 
   if (!newNode) {
+    console.log("indexfinwssl",index);
+    console.log("node fin wassl",oldNode);
+    
+  
     currentPatch.push({ type: "REMOVE", index });
   } else if (!oldNode) {
     currentPatch.push({ type: "ADD", newNode, index });
