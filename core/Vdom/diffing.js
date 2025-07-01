@@ -13,12 +13,7 @@ export function diff(oldNode, newNode) {
 
 function walk(oldNode, newNode, patches, index) {
   const currentPatch = [];
-  if (index == 3 ){
-    console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
-    console.log(oldNode,newNode);
-    
-    
-  }
+
 
   if (!newNode) {
     console.log("indexfinwssl",index);
@@ -38,7 +33,7 @@ function walk(oldNode, newNode, patches, index) {
       currentPatch.push({ type: "ATTRS", attrs: attrPatches, index });
     }
 
-    diffChildren(oldNode.children || [], newNode.children || [], patches, index);
+    diffChildren(oldNode.children || [], newNode.children || [], patches, index);               
   } else {
     currentPatch.push({ type: "REPLACE", newNode, index });
   }

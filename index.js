@@ -13,12 +13,14 @@ console.log("first",first);
 
 
 // 1️⃣ Convertit en Virtual DOM
-const oldTree = htmlToObject(root);
+// const oldTree = htmlToObject(root);
 console.log("✅ oldTree (Virtual DOM) :", oldTree);
 
 // // 2️⃣ Crée un nouveau Virtual DOM
 // // Ici tu peux changer ce que tu veux tester
-const newTree = {
+let oldNode = null;
+
+const vNode = {
   tag: "div",
   attrs: { id: "app" },
   children: [
@@ -39,10 +41,10 @@ const newTree = {
   ]
 };
 
-console.log("✅ newTree (Virtual DOM) :", newTree);
+console.log("✅ newTree (Virtual DOM) :", vNode);
 
 // // 3️⃣ Diff
-const patches = diff(oldTree, newTree);
+const patches = diff(oldNode, vNode);
 console.log("✅ Patches calculés :", patches);
 
 // // 4️⃣ Applique les changements sur le vrai DOM
@@ -51,10 +53,10 @@ globalThis.globalDomIndex = 0;
 patch(root, patches);
 
 console.log("✅ Changements appliqués !");
-
+oldNode = vNode
 // 5️⃣ Affiche le résultat final
 console.log("✅ DOM après patch :", root);
 
 // 6️⃣ Si tu veux, reconstruire le DOM complet à partir du Virtual DOM
-const freshNode = objectToHTML(newTree);
+const freshNode = objectToHTML(vNode);
 document.body.appendChild(freshNode);
