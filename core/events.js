@@ -20,7 +20,7 @@
 
  
  
-console.log("still here");
+// console.log("still here");
 const EventRegistry = {}; // Key: "elementId_eventType" → [handlers]
 let idCounter = 0;
 

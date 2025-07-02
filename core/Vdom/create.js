@@ -1,13 +1,17 @@
 export function htmlToObject(element) {
-  
-  if (element.nodeType === Node.TEXT_NODE && element.textContent.trim() === '') {
+  console.log("-----------------", element);
+
+  if (
+    element.nodeType === Node.TEXT_NODE &&
+    element.textContent.trim() === ""
+  ) {
     return null;
   }
 
   if (element.nodeType === Node.TEXT_NODE) {
     return {
-      type: 'text',
-      content: element.textContent.trim()
+      type: "text",
+      content: element.textContent.trim(),
     };
   }
 

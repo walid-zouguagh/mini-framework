@@ -1,23 +1,24 @@
 // Create function the useState
 let states = []; // ["walid"]
-// let stateIndex = null;// 
+// let stateIndex = null;//
 let stateIndex = 0;
 
-function useState(initialValue){ // "walid"
-    const currentIndex = stateIndex; // null //                     // true             false
+export function useState(initialValue) {
+  // "walid"
+  const currentIndex = stateIndex; // null //                     // true             false
 
-    // states[currentIndex] = states[currentIndex] !== undefined ? states[currentIndex] : initialValue; // walid
-    if (states[currentIndex] === undefined){
-        states[currentIndex] = initialValue;
-    }
-    // const [name, setName] = useState(value)
-    function setstate(newValue){
-        states[currentIndex] = newValue;
-        render();
-    }
-    // stateIndex = stateIndex ? 0 : stateIndex++; 
-    stateIndex++;
-    return [states[currentIndex], setstate];
+  // states[currentIndex] = states[currentIndex] !== undefined ? states[currentIndex] : initialValue; // walid
+  if (states[currentIndex] === undefined) {
+    states[currentIndex] = initialValue;
+  }
+  // const [name, setName] = useState(value)
+  function setstate(newValue) {
+    states[currentIndex] = newValue;
+    render();
+  }
+  // stateIndex = stateIndex ? 0 : stateIndex++;
+  stateIndex++;
+  return [states[currentIndex], setstate];
 }
 
 // Create function the useEffect
@@ -25,62 +26,54 @@ function useState(initialValue){ // "walid"
 let effects = [];
 // let effectIndex = null;
 let effectIndex = 0;
-function useEffect(callback, dependencies){
-    const oldDependencies = effects[effectIndex];
-    let hasChanged = true;
+export function useEffect(callback, dependencies) {
+  const oldDependencies = effects[effectIndex];
+  let hasChanged = true;
 
-    if (oldDependencies){
-        hasChanged = dependencies.some((dep, i) => !Object.is(dep, oldDependencies[i]));
-    }
+  if (oldDependencies) {
+    hasChanged = dependencies.some(
+      (dep, i) => !Object.is(dep, oldDependencies[i])
+    );
+  }
 
-    if (hasChanged){
-        callback();
-    }
-    effects[effectIndex] = dependencies;
-    // effectIndex = effectIndex ? 0 : effectIndex++;
-    effectIndex++;
+  if (hasChanged) {
+    callback();
+  }
+  effects[effectIndex] = dependencies;
+  // effectIndex = effectIndex ? 0 : effectIndex++;
+  effectIndex++;
 }
 
-function jsx(tag, props, ...children) {
-    if (typeof tag === "function") {
-        return tag({ ...props, children });
-    }
-    return { tag, props: props || {}, children };
+export function jsx(tag, props, ...children) {
+  if (typeof tag === "function") {
+    return tag({ ...props, children });
+  }
+  return { tag, props: props || {}, children };
 }
 
+// export default function createElement(node){
+//     if (typeof node === "string" || typeof node === "number"){
+//         return document.createTextNode(String(node));
+//     }
+//     const element = document.createElement(node.tag);
+//     for (let [name, value] of Object.entries(node.props)){
+//         if(name.startsWith("on") && typeof value == "function"){
+//             element.addEventListener(name.slice(2).toLowerCase(), value)
+//         }else if (name == "className"){
+//             element.className = value;
+//         }else if (name == "id"){
+//             element.id = value;
+//         }else{
+//             element.setAttribute(name, value);
+//         }
+//     }
 
-function createElement(node){
-    if (typeof node === "string" || typeof node === "number"){
-        return document.createTextNode(String(node));
-    }
-    const element = document.createElement(node.tag);
-    for (let [name, value] of Object.entries(node.props)){
-        if(name.startsWith("on") && typeof value == "function"){
-            element.addEventListener(name.slice(2).toLowerCase(), value)
-        }else if (name == "className"){
-            element.className = value;
-        }else if (name == "id"){
-            element.id = value;
-        }else{
-            element.setAttribute(name, value);
-        }
-    }
-
-    for (let child of node.children.flat()){
-        if (typeof child == "string" || typeof child == "number"){
-            element.appendChild(document.createTextNode(String(child)))
-        }else{
-            element.appendChild(createElement(child))
-        }
-    }
-    return element;
-}
-
-function render(){
-    stateIndex = 0;
-    effectIndex = 0;
-    const root = document.getElementById("root");
-    root.innerHTML = "";
-    const app = App();
-    root.appendChild(createElement(app));
-}
+//     for (let child of node.children.flat()){
+//         if (typeof child == "string" || typeof child == "number"){
+//             element.appendChild(document.createTextNode(String(child)))
+//         }else{
+//             element.appendChild(createElement(child))
+//         }
+//     }
+//     return element;
+// }

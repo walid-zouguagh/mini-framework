@@ -6,6 +6,8 @@ app.use("/core/", express.static(path.join(__dirname, "/core")));
 app.use("/examples/", express.static(path.join(__dirname, "/examples")));
 
 app.get("/", (req, res) => {
+  console.log(path.join(__dirname, "./examples/todomvc/index.html"));
+
   res.sendFile(path.join(__dirname, "./examples/todomvc/index.html"));
 });
 

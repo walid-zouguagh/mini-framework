@@ -1,20 +1,27 @@
+import { root } from "../dom.js";
+import { htmlToObject } from "./create.js";
+import { objectToHTML } from "./render.js";
+
 export function diffAndApply(oldNode, newNode) {
   walk(oldNode, newNode, null, null);
 }
 
+export function UpdateDOM(new_elements) {
+  console.log(root);
+
+  diffAndApply(htmlToObject(root), root.append(new_elements));
+}
+
 function walk(oldNode, newNode, parentNode, indexInParent) {
   console.log(indexInParent);
-  console.log("newnod",newNode);
-  console.log("oldnode",oldNode);
-  console.log("parent",parentNode);
+  console.log("newnod", newNode);
+  console.log("oldnode", oldNode);
+  console.log("parent", parentNode);
   console.log("----------------------------------------");
-  
-  
-  
-  
+
   if (!newNode) {
-    console.log(indexInParent,"pppppppppppppppppppppppp",oldNode);
-    
+    console.log(indexInParent, "pppppppppppppppppppppppp", oldNode);
+
     if (parentNode && indexInParent !== null) {
       parentNode.children.splice(indexInParent);
     }
@@ -39,12 +46,10 @@ function walk(oldNode, newNode, parentNode, indexInParent) {
     console.log(indexInParent);
     console.log(oldNode.tag);
     console.log(newNode.tag);
-    
-    
+
     if (parentNode && indexInParent !== null) {
       parentNode.children[indexInParent] = newNode;
-      console.log( parentNode.children[indexInParent] );
-      
+      console.log(parentNode.children[indexInParent]);
     }
     return;
   }
@@ -81,4 +86,5 @@ function diffChildren(oldNode, newNode) {
   for (let i = 0; i < maxLen; i++) {
     walk(oldChildren[i], newChildren[i], oldNode, i);
   }
+  
 }
