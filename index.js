@@ -1,38 +1,34 @@
 import { diffAndApply } from "./core/Vdom/diffing.js";
 import { objectToHTML } from "./core/Vdom/render.js";
+import {htmlToObject} from "./core/Vdom/create.js"
 
 
 
-const oldVNode = {
-  tag: "div",
-  attrs: { class: "box" },
-  children: [
-    { type: "text", content: "Hello" },
-    { tag: "span", attrs: {}, children: [] }
-  ]
-};
+const oldVNode = htmlToObject(document.getElementById("root"));
+console.log("oldVdome",oldVNode);
 
-const newVNode = {
+
+const VNode = {
   tag: "div",
   attrs: { class: "container" },
   children: [
     { type: "text", content: "Hello World" },
-    { tag: "span", attrs: { style: "color:red" }, children: [] },
-    { tag: "p", attrs: {}, children: [  { type: "text", content: "wa9ila hadchi khdammmm§§§" }]}
-      
+  
   ]
 };
-
-diffAndApply(oldVNode, newVNode);
-console.log("objet",oldVNode);
-console.log("html",objectToHTML(oldVNode));
+console.log("Newvdome",VNode);
 
 
 
-let rout = document.getElementById("root")
-rout = objectToHTML(oldVNode)
-
-console.log(rout);
-
-
+diffAndApply(oldVNode, VNode);
 console.log(oldVNode);
+
+//console.log("objet",oldVNode);
+//console.log("html",objectToHTML(oldVNode));
+
+
+
+
+
+
+// console.log(oldVNode);

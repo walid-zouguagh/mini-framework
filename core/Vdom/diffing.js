@@ -3,16 +3,25 @@ export function diffAndApply(oldNode, newNode) {
 }
 
 function walk(oldNode, newNode, parentNode, indexInParent) {
+  console.log(indexInParent);
+  console.log("newnod",newNode);
+  console.log("oldnode",oldNode);
+  console.log("parent",parentNode);
+  console.log("----------------------------------------");
+  
+  
+  
+  
   if (!newNode) {
-    // Supprimer ce nœud de son parent
+    console.log(indexInParent,"pppppppppppppppppppppppp",oldNode);
+    
     if (parentNode && indexInParent !== null) {
-      parentNode.children.splice(indexInParent, 1);
+      parentNode.children.splice(indexInParent);
     }
     return;
   }
 
   if (!oldNode) {
-    // Ajouter un nouveau nœud dans le parent
     if (parentNode && indexInParent !== null) {
       parentNode.children.splice(indexInParent, 0, newNode);
     }
@@ -20,7 +29,6 @@ function walk(oldNode, newNode, parentNode, indexInParent) {
   }
 
   if (isTextNode(oldNode) && isTextNode(newNode)) {
-    // Mettre à jour le contenu texte
     if (oldNode.content !== newNode.content) {
       oldNode.content = newNode.content;
     }
@@ -28,17 +36,21 @@ function walk(oldNode, newNode, parentNode, indexInParent) {
   }
 
   if (oldNode.tag !== newNode.tag) {
-    // Remplacer entièrement ce nœud
+    console.log(indexInParent);
+    console.log(oldNode.tag);
+    console.log(newNode.tag);
+    
+    
     if (parentNode && indexInParent !== null) {
       parentNode.children[indexInParent] = newNode;
+      console.log( parentNode.children[indexInParent] );
+      
     }
     return;
   }
 
-  // Si le tag est le même, mettre à jour les attributs
   updateAttrs(oldNode, newNode);
 
-  // Synchroniser les enfants récursivement
   diffChildren(oldNode, newNode);
 }
 
@@ -50,12 +62,10 @@ function updateAttrs(oldNode, newNode) {
   oldNode.attrs = oldNode.attrs || {};
   newNode.attrs = newNode.attrs || {};
 
-  // Mettre à jour ou ajouter les nouveaux attributs
   for (const key in newNode.attrs) {
     oldNode.attrs[key] = newNode.attrs[key];
   }
 
-  // Supprimer les attributs absents
   for (const key in oldNode.attrs) {
     if (!(key in newNode.attrs)) {
       delete oldNode.attrs[key];
