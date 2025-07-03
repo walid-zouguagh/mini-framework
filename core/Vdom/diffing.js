@@ -17,8 +17,6 @@ export function UpdateDOM(realElemt, oldVdom, newVdom) {
 }
 
 function updateChildren(element, oldChildren, newChildren) {
-  console.log(oldChildren);
-  console.log(newChildren);
 
   oldChildren = oldChildren || [];
   newChildren = newChildren || [];

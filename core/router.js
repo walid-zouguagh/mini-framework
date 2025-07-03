@@ -27,6 +27,9 @@ export class Router {
         history.pushState(null, null, path);
         this.handleRouteChange();
     }
+    CurrentPath() {
+        return this.currentPath
+    }
 }
 
 

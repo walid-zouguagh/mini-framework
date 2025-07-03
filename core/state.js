@@ -23,7 +23,6 @@ export function useState(initialValue) {
     render();
   }
   // stateIndex = stateIndex ? 0 : stateIndex++;
-  console.log(states);
   stateIndex++;
   return [states[currentIndex], setstate];
 }

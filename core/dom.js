@@ -1,5 +1,4 @@
 export function createHTML(elment = root, Vdom) {
-  console.log(Vdom, "Vdom");
 
   // console.log(tag, attrs, ...children);
   if (typeof Vdom == "string" || typeof Vdom == "number" || Vdom === undefined || !Vdom) {
