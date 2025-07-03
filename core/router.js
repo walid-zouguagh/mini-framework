@@ -1,3 +1,7 @@
+import { root } from "./dom.js";
+import { currentVdom, updateVdom } from "./render.js";
+import { UpdateDOM } from "./Vdom/diffing.js";
+
 export class Router {
     constructor() {
         this.routers = {};
@@ -12,8 +16,11 @@ export class Router {
     handleRouteChange() {
         const path = window.location.pathname;
         if (this.routers[path]) {
-            this.routers[path]();
+            const Vdom = this.routers[path]();
+            UpdateDOM(root.children[0], currentVdom, Vdom)
+            updateVdom(Vdom)
         }
+        this.currentPath = path
     }
 
     navigate(path) {
@@ -21,3 +28,6 @@ export class Router {
         this.handleRouteChange();
     }
 }
+
+
+export const rout = new Router();

@@ -1,8 +1,12 @@
-// export default function render(){
-//     stateIndex = 0;
-//     effectIndex = 0;
-//     const root = document.getElementById("root");
-//     root.innerHTML = "";
-//     const app = App();
-//     root.appendChild(createElement(app));
-// }
+import { rout } from "./router.js"
+
+export let currentVdom = null
+
+export function updateVdom(new_dome) {
+    currentVdom = new_dome
+}
+
+
+export function render() {
+    rout.handleRouteChange()
+}

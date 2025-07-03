@@ -1,7 +1,11 @@
+import { render } from "./render.js";
+
 // Create function the useState
 let states = []; // ["walid"]
 // let stateIndex = null;//
 let stateIndex = 0;
+
+
 
 export function useState(initialValue) {
   // "walid"
@@ -13,10 +17,13 @@ export function useState(initialValue) {
   }
   // const [name, setName] = useState(value)
   function setstate(newValue) {
+
     states[currentIndex] = newValue;
+    stateIndex = 0
     render();
   }
   // stateIndex = stateIndex ? 0 : stateIndex++;
+  console.log(states);
   stateIndex++;
   return [states[currentIndex], setstate];
 }

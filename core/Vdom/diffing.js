@@ -1,90 +1,117 @@
-import { root } from "../dom.js";
-import { htmlToObject } from "./create.js";
-import { objectToHTML } from "./render.js";
+import { createHTML, root } from "../dom.js";
+// import { htmlToObject } from "./create.js";
+// import { objectToHTML } from "./render.js";
 
-export function diffAndApply(oldNode, newNode) {
-  walk(oldNode, newNode, null, null);
-}
+// export function diffAndApply(oldNode, newNode) {
+//   walk(oldNode, newNode, null, null);
+// }
 
-export function UpdateDOM(new_elements) {
-  console.log(root);
-
-  diffAndApply(htmlToObject(root), root.append(new_elements));
-}
-
-function walk(oldNode, newNode, parentNode, indexInParent) {
-  console.log(indexInParent);
-  console.log("newnod", newNode);
-  console.log("oldnode", oldNode);
-  console.log("parent", parentNode);
-  console.log("----------------------------------------");
-
-  if (!newNode) {
-    console.log(indexInParent, "pppppppppppppppppppppppp", oldNode);
-
-    if (parentNode && indexInParent !== null) {
-      parentNode.children.splice(indexInParent);
-    }
+export function UpdateDOM(realElemt, oldVdom, newVdom) {
+  if (!oldVdom || oldVdom.tag !== newVdom.tag) {
+    const newElement = createHTML(realElemt, newVdom);
+    realElemt?.parentNode?.replaceChild(newElement, realElemt);
     return;
   }
-
-  if (!oldNode) {
-    if (parentNode && indexInParent !== null) {
-      parentNode.children.splice(indexInParent, 0, newNode);
-    }
-    return;
-  }
-
-  if (isTextNode(oldNode) && isTextNode(newNode)) {
-    if (oldNode.content !== newNode.content) {
-      oldNode.content = newNode.content;
-    }
-    return;
-  }
-
-  if (oldNode.tag !== newNode.tag) {
-    console.log(indexInParent);
-    console.log(oldNode.tag);
-    console.log(newNode.tag);
-
-    if (parentNode && indexInParent !== null) {
-      parentNode.children[indexInParent] = newNode;
-      console.log(parentNode.children[indexInParent]);
-    }
-    return;
-  }
-
-  updateAttrs(oldNode, newNode);
-
-  diffChildren(oldNode, newNode);
+  updateAttrs(oldVdom, newVdom, realElemt)
+  updateChildren(realElemt, oldVdom.children, newVdom.children)
 }
 
-function isTextNode(node) {
-  return node && node.type === "text";
+function updateChildren(element, oldChildren, newChildren) {
+  console.log(oldChildren);
+  console.log(newChildren);
+
+  oldChildren = oldChildren || [];
+  newChildren = newChildren || [];
+
+  const oldKeys = new Map();
+  oldChildren.forEach((child, index) => {
+    if (typeof child !== 'string' && child?.props?.key) {
+      oldKeys.set(child.props.key, { vdom: child, element: element.childNodes[index] });
+    }
+  });
+
+
+  const newKeys = new Set(newChildren.filter(c => typeof c !== 'string' && c?.props?.key).map(c => c.props.key));
+  oldKeys.forEach((value, key) => {
+    if (!newKeys.has(key)) {
+      element.removeChild(value.element);
+    }
+  });
+
+  // Update or insert children at each position
+
+  newChildren.forEach((newChild, i) => {
+    let realChild = element.childNodes[i];
+
+    if (typeof newChild === "string") {
+      if (realChild && realChild.nodeType === Node.TEXT_NODE) {
+        if (realChild.textContent !== newChild) {
+          realChild.textContent = newChild;
+        }
+      } else {
+        const textNode = document.createTextNode(newChild);
+        if (realChild) {
+          element.replaceChild(textNode, realChild);
+        } else {
+          element.appendChild(textNode);
+        }
+      }
+    } else {
+      const newKey = newChild?.props?.key;
+      if (newKey) {
+        const oldEntry = oldKeys.get(newKey);
+        if (oldEntry) {
+          const oldElement = oldEntry.element;
+          if (oldElement !== realChild) {
+            element.insertBefore(oldElement, realChild);
+            realChild = oldElement;
+          }
+          UpdateDOM(realChild, oldEntry.vdom, newChild);
+        } else {
+          const newElement = createHTML(element, newChild);
+          if (realChild) {
+            element.insertBefore(newElement, realChild);
+          } else {
+            element.appendChild(newElement);
+          }
+        }
+      } else {
+        if (realChild && realChild.nodeType === Node.ELEMENT_NODE) {
+          const oldChild = oldChildren[i];
+          if (typeof oldChild === 'object' && oldChild.tag === newChild.tag && !oldChild.props?.key) {
+            UpdateDOM(realChild, oldChild, newChild);
+          } else {
+            const newElement = createHTML(element, newChild);
+            element.replaceChild(newElement, realChild);
+          }
+        } else {
+          const newElement = createHTML(element, newChild);
+          if (realChild) {
+            element.replaceChild(newElement, realChild);
+          } else {
+            element.appendChild(newElement);
+          }
+        }
+      }
+    }
+  });
+  while (element.childNodes.length > newChildren.length) {
+    element.removeChild(element.lastChild);
+  }
 }
 
-function updateAttrs(oldNode, newNode) {
-  oldNode.attrs = oldNode.attrs || {};
-  newNode.attrs = newNode.attrs || {};
+function updateAttrs(oldNode, newNode, realElemt) {
+  oldNode = oldNode.attrs || {};
+  newNode = newNode.attrs || {};
 
-  for (const key in newNode.attrs) {
-    oldNode.attrs[key] = newNode.attrs[key];
+  for (const [key, value] of Object.entries(newNode)) {
+    if (typeof value === "function" && key.startsWith("on")) realElemt[key] = value;
+    else realElemt.setAttribute(key, value);
   }
-
-  for (const key in oldNode.attrs) {
-    if (!(key in newNode.attrs)) {
-      delete oldNode.attrs[key];
+  for (const [key, _] of Object.entries(oldNode)) {
+    if (!(key in newNode)) {
+      delete realElemt.attrs[key];
     }
   }
 }
 
-function diffChildren(oldNode, newNode) {
-  const oldChildren = oldNode.children || [];
-  const newChildren = newNode.children || [];
-  const maxLen = Math.max(oldChildren.length, newChildren.length);
-
-  for (let i = 0; i < maxLen; i++) {
-    walk(oldChildren[i], newChildren[i], oldNode, i);
-  }
-  
-}

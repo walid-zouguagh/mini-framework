@@ -1,10 +1,13 @@
 
-import { Router } from "../../core/router.js";
-import { createHTML, jsx, createElement } from "/core/dom.js";
-import { render } from "../../core/Vdom/render.js";
+import { jsx } from "../../core/dom.js";
+import { rout, Router } from "../../core/router.js";
+import { useState } from "../../core/state.js";
+// import { render } from "../../core/Vdom/render.js";
 
+
+// let [text, SetText] = useState("")
 function Footer() {
-  return jsx("footer", { className: "info" },
+  return jsx("footer", { class: "info" },
     jsx("p", {}, "Double-click to edit a todo"),
     jsx("p", {}, "Created by the mini framework Team"),
     jsx("p", {},
@@ -14,34 +17,47 @@ function Footer() {
 }
 
 function App() {
-  return jsx("section", { className: "todoapp", id: "root" },
-    jsx("header", { className: "header", "data-testid": "header" },
+  let [todo, SetTodo] = useState([]);
+
+  // console.log(todo, "fgfdg");
+
+  return jsx("section", { class: "todoapp", id: "root" },
+    jsx("header", { class: "header", "data-testid": "header" },
       jsx("h1", {}, "todos"),
-      jsx("div", { className: "input-container" },
+      jsx("div", { class: "input-container" },
         jsx("input", {
-          className: "new-todo",
+          class: "new-todo",
           id: "todo-input",
           type: "text",
           "data-testid": "text-input",
           placeholder: "What needs to be done?",
+          onkeydown: (e) => {
+            if (e.key === "Enter" && e.target.value.trim() !== "") {
+              SetTodo([...todo, e.target.value.trim()]);
+              e.target.value = ""; // clearr input after adding
+            }
+          },
         }),
         jsx("label", {
-          className: "visually-hidden",
+          class: "visually-hidden",
           htmlFor: "todo-input"
         }, "New Todo Input")
       )
     ),
-    jsx("main", { className: "main", "data-testid": "main" },
-      jsx("div", { className: "toggle-all-container" })
+    jsx("main", { class: "main", "data-testid": "main" },
+      jsx("div", { class: "toggle-all-container" },
+        ...todo.map((c, i) => jsx("p", { key: i }, c))
+      )
     ),
     jsx(Footer, {})
   );
 }
 
-const rout = new Router();
+
+
 rout.addrout("/", App);
 rout.addrout("/about", () => console.log("hello this is the about page"));
 rout.handleRouteChange();
 
-render(App);
+// render(App);
 
