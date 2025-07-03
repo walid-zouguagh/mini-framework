@@ -3,7 +3,7 @@ let states = []; // ["walid"]
 // let stateIndex = null;// 
 let stateIndex = 0;
 
-export default function useState(initialValue){ // "walid"
+export function useState(initialValue){ // "walid"
     const currentIndex = stateIndex; // null //                     // true             false
 
     // states[currentIndex] = states[currentIndex] !== undefined ? states[currentIndex] : initialValue; // walid
@@ -25,7 +25,7 @@ export default function useState(initialValue){ // "walid"
 let effects = [];
 // let effectIndex = null;
 let effectIndex = 0;
-export default function useEffect(callback, dependencies){
+export function useEffect(callback, dependencies){
     const oldDependencies = effects[effectIndex];
     let hasChanged = true;
 
@@ -41,7 +41,7 @@ export default function useEffect(callback, dependencies){
     effectIndex++;
 }
 
-export default function jsx(tag, props, ...children) {
+export function jsx(tag, props, ...children) {
     if (typeof tag === "function") {
         return tag({ ...props, children });
     }
@@ -49,7 +49,7 @@ export default function jsx(tag, props, ...children) {
 }
 
 
-export default function createElement(node){
+export function createElement(node){
     if (typeof node === "string" || typeof node === "number"){
         return document.createTextNode(String(node));
     }
