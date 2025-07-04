@@ -15,6 +15,7 @@ export function createHTML(elment = root, Vdom) {
     else el.setAttribute(key, value);
   }
 
+
   // Ajouter les enfants
   if (Vdom.children) {
     for (const child of Vdom.children.flat()) {
