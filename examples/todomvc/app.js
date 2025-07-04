@@ -42,13 +42,13 @@ const SetNewTodoList = (text, done = false, id = new Date()) => {
 
 const RemoveToList = (id) => {
   console.log("hani hna");
-  console.log("id",id)
+  console.log("id", id)
   console.log(todoList);
-  
-  
+
+
   todoList = todoList.filter((todo) => todo.id !== id);
-  console.log("after",todoList);
-  
+  console.log("after", todoList);
+
   render();
 };
 
@@ -102,22 +102,23 @@ function Footer({ filter = "all" }) {
     jsx("ul", { class: "filters", "data-testid": "footer-navigation" },
       jsx("li", {}, jsx("a", {
         class: filter === "all" ? "selected" : "", href: "#/", onclick: () => {
-          currentList = todoList
         }
       }, "All")),
       jsx("li", {}, jsx("a", {
-        class: filter === "active" ? "selected" : "", href: "#/active", onclick: () => {
+        class: filter === "active" ? "selected" : "", href: "#/active"
+        , onclick: () => {
           currentList = todoList.filter((todo) => {
             if (!todo.done) {
               return { ...todo }
             }
           })
-          console.log("curentsliste",currentList);
-          
+          console.log("curentsliste", currentList);
+
         }
       }, "Active")),
       jsx("li", {}, jsx("a", {
-        class: filter === "completed" ? "selected" : "", href: "#/completed", onclick: () => {
+        class: filter === "completed" ? "selected" : "", href: "#/completed"
+        , onclick: () => {
           currentList = todoList.filter((todo) => {
             if (todo.done) {
               return { ...todo }
@@ -131,7 +132,7 @@ function Footer({ filter = "all" }) {
 }
 
 function MainSection() {
-  console.log(currentList   , "good");
+  console.log(currentList, "good");
   return jsx("main", { class: "main", "data-testid": "main" },
     jsx("div", { class: "toggle-all-container" },
       currentList.length > 0 && jsx("input", {
