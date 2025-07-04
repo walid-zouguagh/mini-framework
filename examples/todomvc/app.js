@@ -41,7 +41,14 @@ const SetNewTodoList = (text, done = false, id = new Date()) => {
 };
 
 const RemoveToList = (id) => {
+  console.log("hani hna");
+  console.log("id",id)
+  console.log(todoList);
+  
+  
   todoList = todoList.filter((todo) => todo.id !== id);
+  console.log("after",todoList);
+  
   render();
 };
 
@@ -122,7 +129,7 @@ function Footer({ filter = "all" }) {
 }
 
 function MainSection() {
-  console.log(currentList);
+  console.log(currentList   , "good");
   return jsx("main", { class: "main", "data-testid": "main" },
     jsx("div", { class: "toggle-all-container" },
       currentList.length > 0 && jsx("input", {
@@ -139,7 +146,7 @@ function MainSection() {
       }, "Toggle All Input")
     ),
     currentList.length > 0 && jsx("ul", { class: "todo-list", "data-testid": "todo-list" },
-      ...currentList.map((todo) =>
+      ...todoList.map((todo) =>
         jsx("li", { class: todo.done ? "completed" : "", "data-testid": "todo-item" },
           jsx("div", { class: "view" },
             editId !== todo.id && jsx("input", {

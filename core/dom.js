@@ -7,7 +7,7 @@ export function createHTML(elment = root, Vdom) {
     return el
   }
 
-  const el = document.createElement(Vdom.tag);
+  const el = document.createElement(Vdom.tag); 
 
   // Appliquer les attributs
   for (const [key, value] of Object.entries(Vdom.attrs)) {

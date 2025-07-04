@@ -23,13 +23,13 @@ function updateChildren(element, oldChildren, newChildren) {
 
   const oldKeys = new Map();
   oldChildren.forEach((child, index) => {
-    if (typeof child !== 'string' && child?.props?.key) {
-      oldKeys.set(child.props.key, { vdom: child, element: element.childNodes[index] });
+    if (typeof child !== 'string' && child?.attrs?.key) {
+      oldKeys.set(child.attrs.key, { vdom: child, element: element.childNodes[index] });
     }
   });
 
 
-  const newKeys = new Set(newChildren.filter(c => typeof c !== 'string' && c?.props?.key).map(c => c.props.key));
+  const newKeys = new Set(newChildren.filter(c => typeof c !== 'string' && c?.attrs?.key).map(c => c.attrs.key));
   oldKeys.forEach((value, key) => {
     if (!newKeys.has(key)) {
       element.removeChild(value.element);
@@ -55,7 +55,7 @@ function updateChildren(element, oldChildren, newChildren) {
         }
       }
     } else {
-      const newKey = newChild?.props?.key;
+      const newKey = newChild?.attrs?.key;
       if (newKey) {
         const oldEntry = oldKeys.get(newKey);
         if (oldEntry) {
@@ -66,7 +66,7 @@ function updateChildren(element, oldChildren, newChildren) {
           }
           UpdateDOM(realChild, oldEntry.vdom, newChild);
         } else {
-          const newElement = createHTML(element, newChild);
+          const newElement = createHTML(element, newChild);      
           if (realChild) {
             element.insertBefore(newElement, realChild);
           } else {
@@ -76,7 +76,7 @@ function updateChildren(element, oldChildren, newChildren) {
       } else {
         if (realChild && realChild.nodeType === Node.ELEMENT_NODE) {
           const oldChild = oldChildren[i];
-          if (typeof oldChild === 'object' && oldChild.tag === newChild.tag && !oldChild.props?.key) {
+          if (typeof oldChild === 'object' && oldChild.tag === newChild.tag && !oldChild.attrs?.key) {
             UpdateDOM(realChild, oldChild, newChild);
           } else {
             const newElement = createHTML(element, newChild);
@@ -92,7 +92,7 @@ function updateChildren(element, oldChildren, newChildren) {
         }
       }
     }
-  });
+  }); 
   while (element.childNodes.length > newChildren.length) {
     element.removeChild(element.lastChild);
   }
