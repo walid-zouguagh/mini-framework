@@ -94,7 +94,7 @@ function Header() {
   );
 }
 
-let currentList = todoList
+let currentList = todoList;
 
 function Footer({ filter = "all" }) {
   return jsx("footer", { class: "footer", "data-testid": "footer" },
@@ -112,6 +112,8 @@ function Footer({ filter = "all" }) {
               return { ...todo }
             }
           })
+          console.log("curentsliste",currentList);
+          
         }
       }, "Active")),
       jsx("li", {}, jsx("a", {
