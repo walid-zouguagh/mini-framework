@@ -37,15 +37,6 @@ function UpdateAll() {
   }));
   render();
 }
-// function UpdateAll() {
-//   // Si toutes sont cochées, on décoche tout, sinon on coche tout
-//   const allDone = todoList.every((todo) => todo.done);
-//   todoList = todoList.map((todo) => ({
-//     ...todo,
-//     done: !allDone,
-//   }));
-//   render();
-// }
 
 const saveEdit = (newText, id) => {
   if (newText.trim().length <= 1) return;
