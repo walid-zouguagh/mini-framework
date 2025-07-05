@@ -8,6 +8,18 @@ import { useState } from "../../core/state.js";
 let todoList = [];
 let editId;
 
+function filter_with_hash(hash) {
+  if (hash === "/" || hash === "#/") {
+    return todoList;
+  } else if (hash === "#/active") {
+    return todoList.filter((todo) => !todo.done);
+  } else if (hash === "#/completed") {
+    return todoList.filter((todo) => todo.done);
+  } else {
+    return todoList;
+  }
+}
+
 function lengthTodo() {
   return todoList.filter((todo) => !todo.done).length;
 }
@@ -42,9 +54,8 @@ const SetNewTodoList = (text, done = false, id = new Date()) => {
 
 const RemoveToList = (id) => {
   console.log("hani hna");
-  console.log("id", id)
+  console.log("id", id);
   console.log(todoList);
-
 
   todoList = todoList.filter((todo) => todo.id !== id);
   console.log("after", todoList);
@@ -65,7 +76,9 @@ const AddToCommple = (id) => {
 };
 
 function FooterInfo() {
-  return jsx("footer", { class: "info" },
+  return jsx(
+    "footer",
+    { class: "info" },
     jsx("p", {}, "Double-click to edit a todo"),
     jsx("p", {}, "Created by the mini framework Team"),
     jsx("p", {}, jsx("a", { href: "http://todomvc.com" }, "TodoMVC"))
@@ -73,9 +86,13 @@ function FooterInfo() {
 }
 
 function Header() {
-  return jsx("header", { class: "header", "data-testid": "header" },
+  return jsx(
+    "header",
+    { class: "header", "data-testid": "header" },
     jsx("h1", {}, "todos"),
-    jsx("div", { class: "input-container" },
+    jsx(
+      "div",
+      { class: "input-container" },
       jsx("input", {
         class: "new-todo",
         id: "todo-input",
@@ -89,109 +106,161 @@ function Header() {
           }
         },
       }),
-      jsx("label", { class: "visually-hidden", for: "todo-input" }, "New Todo Input")
-    )
-  );
-}
-
-let currentList = todoList;
-
-function Footer({ filter = "all" }) {
-  return jsx("footer", { class: "footer", "data-testid": "footer" },
-    jsx("span", { class: "todo-count" }, `${lengthTodo()} item(s) left!`),
-    jsx("ul", { class: "filters", "data-testid": "footer-navigation" },
-      jsx("li", {}, jsx("a", {
-        class: filter === "all" ? "selected" : "", href: "#/", onclick: () => {
-        }
-      }, "All")),
-      jsx("li", {}, jsx("a", {
-        class: filter === "active" ? "selected" : "", href: "#/active"
-        , onclick: () => {
-          currentList = todoList.filter((todo) => {
-            if (!todo.done) {
-              return { ...todo }
-            }
-          })
-          console.log("curentsliste", currentList);
-
-        }
-      }, "Active")),
-      jsx("li", {}, jsx("a", {
-        class: filter === "completed" ? "selected" : "", href: "#/completed"
-        , onclick: () => {
-          currentList = todoList.filter((todo) => {
-            if (todo.done) {
-              return { ...todo }
-            }
-          })
-        }
-      }, "Completed"))
-    ),
-    jsx("button", { class: "clear-completed", onclick: clearCompleted }, "Clear completed")
-  );
-}
-
-function MainSection() {
-  console.log(currentList, "good");
-  return jsx("main", { class: "main", "data-testid": "main" },
-    jsx("div", { class: "toggle-all-container" },
-      currentList.length > 0 && jsx("input", {
-        class: "toggle-all",
-        type: "checkbox",
-        id: "toggle-all",
-        "data-testid": "toggle-all",
-        onclick: UpdateAll
-      }),
-      currentList.length > 0 && jsx("label", {
-        class: "toggle-all-label",
-        for: "toggle-all",
-        onclick: UpdateAll
-      }, "Toggle All Input")
-    ),
-    currentList.length > 0 && jsx("ul", { class: "todo-list", "data-testid": "todo-list" },
-      ...todoList.map((todo) =>
-        jsx("li", { class: todo.done ? "completed" : "", "data-testid": "todo-item" },
-          jsx("div", { class: "view" },
-            editId !== todo.id && jsx("input", {
-              class: "toggle",
-              type: "checkbox",
-              "data-testid": "todo-item-toggle",
-              // checked: todo.done,
-              onclick: () => AddToCommple(todo.id)
-            }),
-            jsx("label", {
-              "data-testid": "todo-item-label",
-              ondblclick: () => {
-                editId = todo.id;
-                render();
-              },
-              contenteditable: editId === todo.id,
-              onkeydown: (e) => {
-                if (e.code === "Enter") saveEdit(e.target.textContent, todo.id);
-              },
-              onblur: () => {
-                editId = undefined;
-                render();
-              },
-              ref: (el) => {
-                if (editId === todo.id) el.focus();
-              }
-            }, todo.text),
-            editId !== todo.id && jsx("button", {
-              class: "destroy",
-              "data-testid": "todo-item-button",
-              onclick: () => RemoveToList(todo.id)
-            })
-          )
-        )
+      jsx(
+        "label",
+        { class: "visually-hidden", for: "todo-input" },
+        "New Todo Input"
       )
     )
   );
 }
 
+// let todoList = todoList;
+
+function Footer({ filter = "all" }) {
+  return jsx(
+    "footer",
+    { class: "footer", "data-testid": "footer" },
+    jsx("span", { class: "todo-count" }, `${lengthTodo()} item(s) left!`),
+    jsx(
+      "ul",
+      { class: "filters", "data-testid": "footer-navigation" },
+      jsx(
+        "li",
+        {},
+        jsx(
+          "a",
+          {
+            class: filter === "all" ? "selected" : "",
+            href: "#/",
+          },
+          "All"
+        )
+      ),
+      jsx(
+        "li",
+        {},
+        jsx(
+          "a",
+          {
+            class: filter === "active" ? "selected" : "",
+            href: "#/active",
+          },
+          "Active"
+        )
+      ),
+      jsx(
+        "li",
+        {},
+        jsx(
+          "a",
+          {
+            class: filter === "completed" ? "selected" : "",
+            href: "#/completed",
+          },
+          "Completed"
+        )
+      )
+    ),
+    jsx(
+      "button",
+      { class: "clear-completed", onclick: clearCompleted },
+      "Clear completed"
+    )
+  );
+}
+
+function MainSection() {
+  // console.log(currentList, "good");
+  // console.log(window.location.hash);
+  let show_toList = filter_with_hash(window.location.hash);
+  return jsx(
+    "main",
+    { class: "main", "data-testid": "main" },
+    jsx(
+      "div",
+      { class: "toggle-all-container" },
+      todoList.length > 0 &&
+        jsx("input", {
+          class: "toggle-all",
+          type: "checkbox",
+          id: "toggle-all",
+          "data-testid": "toggle-all",
+          onclick: UpdateAll,
+        }),
+      todoList.length > 0 &&
+        jsx(
+          "label",
+          {
+            class: "toggle-all-label",
+            for: "toggle-all",
+            onclick: UpdateAll,
+          },
+          "Toggle All Input"
+        )
+    ),
+    todoList.length > 0 &&
+      jsx(
+        "ul",
+        { class: "todo-list", "data-testid": "todo-list" },
+        ...show_toList.map((todo) =>
+          jsx(
+            "li",
+            { class: todo.done ? "completed" : "", "data-testid": "todo-item" },
+            jsx(
+              "div",
+              { class: "view" },
+              editId !== todo.id &&
+                jsx("input", {
+                  class: "toggle",
+                  type: "checkbox",
+                  "data-testid": "todo-item-toggle",
+                  // checked: todo.done,
+                  onclick: () => AddToCommple(todo.id),
+                }),
+              jsx(
+                "label",
+                {
+                  "data-testid": "todo-item-label",
+                  ondblclick: () => {
+                    editId = todo.id;
+                    render();
+                  },
+                  contenteditable: editId === todo.id,
+                  onkeydown: (e) => {
+                    if (e.code === "Enter")
+                      saveEdit(e.target.textContent, todo.id);
+                  },
+                  onblur: () => {
+                    editId = undefined;
+                    render();
+                  },
+                  ref: (el) => {
+                    if (editId === todo.id) el.focus();
+                  },
+                },
+                todo.text
+              ),
+              editId !== todo.id &&
+                jsx("button", {
+                  class: "destroy",
+                  "data-testid": "todo-item-button",
+                  onclick: () => RemoveToList(todo.id),
+                })
+            )
+          )
+        )
+      )
+  );
+}
+
 function App() {
-  return jsx("div", null,
-    jsx("section", { class: "todoapp", id: "root" },
+  return jsx(
+    "div",
+    null,
+    jsx(
+      "section",
+      { class: "todoapp", id: "root" },
       jsx(Header),
       jsx(MainSection),
       todoList.length > 0 && jsx(Footer, { filter: "all" })
