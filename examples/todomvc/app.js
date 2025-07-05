@@ -37,6 +37,15 @@ function UpdateAll() {
   }));
   render();
 }
+// function UpdateAll() {
+//   // Si toutes sont cochées, on décoche tout, sinon on coche tout
+//   const allDone = todoList.every((todo) => todo.done);
+//   todoList = todoList.map((todo) => ({
+//     ...todo,
+//     done: !allDone,
+//   }));
+//   render();
+// }
 
 const saveEdit = (newText, id) => {
   if (newText.trim().length <= 1) return;
@@ -114,8 +123,6 @@ function Header() {
     )
   );
 }
-
-// let todoList = todoList;
 
 function Footer({ filter = "all" }) {
   return jsx(
@@ -206,17 +213,24 @@ function MainSection() {
         ...show_toList.map((todo) =>
           jsx(
             "li",
-            { class: todo.done ? "completed" : "", "data-testid": "todo-item" },
+            {
+              class: todo.done ? "completed" : "",
+              "data-testid": "todo-item",
+              "data-id": todo.id, //for testing
+            },
             jsx(
               "div",
               { class: "view" },
               editId !== todo.id &&
                 jsx("input", {
                   class: "toggle",
-                  type: "checkbox",
+                  type: todo.done ? "checkbox" : "",
+                  // type: "checkbox",
                   "data-testid": "todo-item-toggle",
-                  // checked: todo.done,
-                  onclick: () => AddToCommple(todo.id),
+                  checked: todo.done,
+                  onclick: () => {
+                    AddToCommple(todo.id);
+                  },
                 }),
               jsx(
                 "label",
@@ -270,6 +284,4 @@ function App() {
 }
 
 rout.addrout("/", App);
-// rout.addrout("/active", () => App);
-// rout.addrout("/completed", () => App);
 rout.handleRouteChange();
