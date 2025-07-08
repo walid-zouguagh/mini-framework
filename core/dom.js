@@ -1,43 +1,42 @@
 export function createHTML(elment = root, Vdom) {
-
-  // console.log(tag, attrs, ...children);
-  if (typeof Vdom == "string" || typeof Vdom == "number" || Vdom === undefined || !Vdom) {
-    const el = document.createTextNode(String(Vdom || ""))
-    elment.append(el)
-    return el
+  if (
+    typeof Vdom == "string" ||
+    typeof Vdom == "number" ||
+    Vdom === undefined ||
+    !Vdom
+  ) {
+    const el = document.createTextNode(String(Vdom || ""));
+    elment.append(el); // <p id="1" onclick = (e) => {} >text node</p>
+    return el;
   }
 
-  const el = document.createElement(Vdom.tag); 
+  const el = document.createElement(Vdom.tag);
 
   // Appliquer les attributs
-  for (const [key, value] of Object.entries(Vdom.attrs)) {
+  for (const [key, value] of Object.entries(Vdom.attrs)) { // [[id: "1"], [class: "class1"], [onclick: functon(){}] ]
     if (typeof value === "function" && key.startsWith("on")) el[key] = value;
     else el.setAttribute(key, value);
   }
 
-
-  // Ajouter les enfants
   if (Vdom.children) {
     for (const child of Vdom.children.flat()) {
-      createHTML(el, child)
+      createHTML(el, child);
     }
   }
-  elment.append(el)
+  elment.append(el);
   return el;
 }
 
 export const root = document.getElementById("root");
 
-
 export function jsx(tag, attrs, ...children) {
   if (typeof tag === "function") {
-    return tag(attrs, ...children)
+    return tag(attrs, ...children);
   } else {
     return {
       tag,
       attrs: attrs || {},
-      children
-    }
+      children,
+    };
   }
-
 }

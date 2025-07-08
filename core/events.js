@@ -1,27 +1,8 @@
-// function Eventlistener(Element,event , callback){
-//     if (Element == "document"){
-//         document['on'+event] =  callback;
-//     }else if (Element == "window" ){
-//         window['on' + event] = callback;
-//     }
-//     //set this event as attribute in his element with a prefix "on" with value (callback)
-//     Element.setAttribute(`on${event}` , callback);
-// }
-
-// createElement('Div' , {
-//     onclick: ()=>{
-
-//     }
-//     autofocus: true,
-// })
-
-// @private
-//     this._winOrDocEvents = ['resize', 'load', 'unload', 'beforeunload','hashchange', 'popstate', 'DOMContentLoaded'];
-
+ 
 // console.log("still here");
+// we create an object to store the events with its call back function
 const EventRegistry = {}; // Key: "elementId_eventType" → [handlers]
 let idCounter = 0;
-
 // Events your framework supports
 const SupportedEvents = [
   "click",

@@ -1,4 +1,4 @@
-import { jsx } from "react/jsx-runtime";
+import {jsx} from "./dom.js"
 
 export default function NotFound() {
   return jsx(

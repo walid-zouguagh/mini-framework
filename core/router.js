@@ -17,11 +17,7 @@ export class Router {
     const path = window.location.pathname;
 
     if (this.routers[path]) {
-      const Vdom = this.routers[path]();
-      // console.log("Vdom------",Vdom);
-      // console.log("currentVdom-----------",currentVdom);
-      // console.log("root.children[0]-----------",root.children[0]);
-
+      const Vdom = this.routers[path](); 
       UpdateDOM(root.children[0], currentVdom, Vdom);
       updateVdom(Vdom);
     }

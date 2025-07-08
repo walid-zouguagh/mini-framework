@@ -1,5 +1,3 @@
-// ✅ FIXED VERSION OF YOUR ORIGINAL APP BASED ON THE REFERENCE CODE
-
 import { jsx } from "../../core/dom.js";
 import { render } from "../../core/render.js";
 import { rout } from "../../core/router.js";
@@ -235,7 +233,6 @@ function Footer({ filter = "all", todos, setTodos }) {
 }
 
 function MainSection({ todos, setTodos, filter }) {
-  
   const showList = filter_with_hash(`#/${filter}`, todos);
   const allCompleted = todos.length > 0 && todos.every((todo) => todo.done);
   // function toggleTodo(id) {
@@ -274,69 +271,60 @@ function MainSection({ todos, setTodos, filter }) {
       jsx(
         "ul",
         { class: "todo-list", "data-testid": "todo-list" },
-        ...showList.map(
-          (
-            todo
-          ) =>
+        ...showList.map((todo) =>
+          jsx(
+            "li",
+            {
+              class: todo.done ? "completed" : "",
+              "data-testid": "todo-item",
+              "data-id": todo.id,
+            },
             jsx(
-              "li",
-              {
-                class: todo.done ? "completed" : "",
-                "data-testid": "todo-item",
-                "data-id": todo.id,
-              },
-              jsx(
-                "div",
-                { class: "view" },
-                editId !== todo.id &&
-                  jsx("input", {
-                    class: "toggle",
-                    type: todo.done ? "checkbox" : "",
-                    // type: "checkbox",
-                    "data-testid": "todo-item-toggle",
-                    checked: todo.done,
-                    onclick: () => {
-                      window.location.hash = "#/";
-                      AddToCommple(todo.id, todos, setTodos);
-                    },
-                  }),
-                jsx(
-                  "label",
-                  {
-                    "data-testid": "todo-item-label",
-                    ondblclick: () => {
-                      editId = todo.id;
-                      render();
-                    },
-                    contenteditable: editId === todo.id,
-                    onkeydown: (e) => {
-                      if (e.code === "Enter")
-                        // saveEdit(e.target.textContent, todo.id);
-                        saveEdit(
-                          e.target.textContent,
-                          todo.id,
-                          todos,
-                          setTodos
-                        );
-                    },
-                    onblur: () => {
-                      editId = undefined;
-                      render();
-                    },
-                    ref: (el) => {
-                      if (editId === todo.id) el.focus();
-                    },
+              "div",
+              { class: "view" },
+              editId !== todo.id &&
+                jsx("input", {
+                  class: "toggle",
+                  type: todo.done ? "checkbox" : "",
+                  // type: "checkbox",
+                  "data-testid": "todo-item-toggle",
+                  checked: todo.done,
+                  onclick: () => {
+                    AddToCommple(todo.id, todos, setTodos);
                   },
-                  todo.text
-                ),
-                editId !== todo.id &&
-                  jsx("button", {
-                    class: "destroy",
-                    "data-testid": "todo-item-button",
-                    onclick: () => RemoveToList(todo.id, todos, setTodos),
-                  })
-              )
+                }),
+              jsx(
+                "label",
+                {
+                  "data-testid": "todo-item-label",
+                  ondblclick: () => {
+                    editId = todo.id;
+                    render();
+                  },
+                  contenteditable: editId === todo.id,
+                  onkeydown: (e) => {
+                    if (e.code === "Enter")
+                      // saveEdit(e.target.textContent, todo.id);
+                      saveEdit(e.target.textContent, todo.id, todos, setTodos);
+                  },
+                  onblur: () => {
+                    editId = undefined;
+                    render();
+                  },
+                  ref: (el) => {
+                    if (editId === todo.id) el.focus();
+                  },
+                },
+                todo.text
+              ),
+              editId !== todo.id &&
+                jsx("button", {
+                  class: "destroy",
+                  "data-testid": "todo-item-button",
+                  onclick: () => RemoveToList(todo.id, todos, setTodos),
+                })
             )
+          )
         )
       )
   );

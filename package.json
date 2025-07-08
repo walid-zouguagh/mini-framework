@@ -17,11 +17,11 @@
   "keywords": [
     "mini-frameword"
   ],
-  "author": [
-    "walid zouguagh",
-    "ayoub draoui",
-    "zakaria bassadou",
-    "anouar boutamgharin"
+  "authors": [
+    "Walid Zouguagh",
+    "Ayoub Draoui",
+    "Zakaria Bessadou",
+    "Anouar Boutamgharine"
   ],
   "license": "ISC",
   "devDependencies": {

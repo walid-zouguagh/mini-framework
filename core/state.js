@@ -8,11 +8,7 @@ export function resetStateIndex() {
 }
 
 export function useState(initialValue) {
-  const currentIndex = stateIndex;
-  console.log("222222222", initialValue, "initialValue");
-
-  console.log("1111111111111", states);
-
+  const currentIndex = stateIndex; 
   if (states[currentIndex] === undefined) {
     states[currentIndex] = initialValue;
   }
