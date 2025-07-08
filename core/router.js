@@ -3,39 +3,38 @@ import { currentVdom, updateVdom } from "./render.js";
 import { UpdateDOM } from "./Vdom/diffing.js";
 
 export class Router {
-    constructor() {
-        this.routers = {};
-        this.currentPath = window.location.pathname;
-        window.addEventListener("popstate", () => this.handleRouteChange());
-    }
+  constructor() {
+    this.routers = {};
+    this.currentPath = window.location.pathname;
+    window.addEventListener("popstate", () => this.handleRouteChange());
+  }
 
-    addrout(path, callback) {
-        this.routers[path] = callback;
-    }
+  addrout(path, callback) {
+    this.routers[path] = callback;
+  }
 
-    handleRouteChange() {
-        const path = window.location.pathname;
+  handleRouteChange() {
+    const path = window.location.pathname;
 
-        if (this.routers[path]) {
-            const Vdom = this.routers[path]();
-            console.log("Vdom------",Vdom);
-            console.log("currentVdom-----------",currentVdom);
-            console.log("root.children[0]-----------",root.children[0]);
-            
-            UpdateDOM(root.children[0], currentVdom, Vdom)
-            updateVdom(Vdom)
-        }
-        this.currentPath = path
-    }
+    if (this.routers[path]) {
+      const Vdom = this.routers[path]();
+      // console.log("Vdom------",Vdom);
+      // console.log("currentVdom-----------",currentVdom);
+      // console.log("root.children[0]-----------",root.children[0]);
 
-    navigate(path) {
-        history.pushState(null, null, path);
-        this.handleRouteChange();
+      UpdateDOM(root.children[0], currentVdom, Vdom);
+      updateVdom(Vdom);
     }
-    CurrentPath() {
-        return this.currentPath
-    }
+    this.currentPath = path;
+  }
+
+  navigate(path) {
+    history.pushState(null, null, path);
+    this.handleRouteChange();
+  }
+  CurrentPath() {
+    return this.currentPath;
+  }
 }
-
 
 export const rout = new Router();

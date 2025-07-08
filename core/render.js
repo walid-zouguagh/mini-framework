@@ -1,12 +1,13 @@
-import { rout } from "./router.js"
+import { rout } from "./router.js";
+import { resetStateIndex } from "./state.js";
 
-export let currentVdom = null
+export let currentVdom = null;
 
 export function updateVdom(new_dome) {
-    currentVdom = new_dome
+  currentVdom = new_dome;
 }
 
-
 export function render() {
-    rout.handleRouteChange()
+  resetStateIndex();
+  rout.handleRouteChange();
 }

@@ -1,27 +1,31 @@
 import { render } from "./render.js";
 
-// Create function the useState
-let states = []; // ["walid"]
-// let stateIndex = null;//
-let stateIndex = 0;
+let states = [];
+export let stateIndex = 0;
+
+export function resetStateIndex() {
+  stateIndex = 0;
+}
 
 export function useState(initialValue) {
-  // "walid"
-  const currentIndex = stateIndex; // null //                     // true             false
+  const currentIndex = stateIndex;
+  console.log("222222222", initialValue, "initialValue");
 
-  // states[currentIndex] = states[currentIndex] !== undefined ? states[currentIndex] : initialValue; // walid
+  console.log("1111111111111", states);
+
   if (states[currentIndex] === undefined) {
     states[currentIndex] = initialValue;
   }
-  // const [name, setName] = useState(value)
-  function setstate(newValue) {
-    states[currentIndex] = newValue;
-    stateIndex = 0;
+
+  function setState(newValue) {
+    console.log("new value", typeof newValue);
+    if (typeof newValue === "function") states[currentIndex] = newValue();
+    else states[currentIndex] = newValue;
     render();
   }
-  // stateIndex = stateIndex ? 0 : stateIndex++;
-  stateIndex++;
-  return [states[currentIndex], setstate];
+
+  stateIndex++; // Move to next state slot
+  return [states[currentIndex], setState];
 }
 
 export function jsx(tag, props, ...children) {
