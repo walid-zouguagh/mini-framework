@@ -8,6 +8,8 @@ export function updateVdom(new_dome) {
 }
 
 export function render() {
+  console.log("rerender used");
+
   resetStateIndex();
   rout.handleRouteChange();
 }

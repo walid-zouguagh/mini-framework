@@ -24,7 +24,7 @@ function updateChildren(element, oldChildren, newChildren) {
   const oldKeys = new Map();
   oldChildren.forEach((child, index) => {
     if (typeof child !== 'string' && child?.attrs?.key) {
-      oldKeys.set(child.attrs.key, { vdom: child, element: element.childNodes[index] });
+      oldKeys.set(child.attrs.key, { vdom: child, element: element.childNodes[index] });  ///[key:{vdom:ch..}]
     }
   });
 
@@ -39,10 +39,10 @@ function updateChildren(element, oldChildren, newChildren) {
   // Update or insert children at each position
 
   newChildren.forEach((newChild, i) => {
-    let realChild = element.childNodes[i];
+    let realChild = element.childNodes[i];      // div{div,p,spam}
 
     if (typeof newChild === "string") {
-      if (realChild && realChild.nodeType === Node.TEXT_NODE) {
+      if (realChild && realChild.nodeType === Node.TEXT_NODE) { // hello
         if (realChild.textContent !== newChild) {
           realChild.textContent = newChild;
         }
@@ -66,7 +66,7 @@ function updateChildren(element, oldChildren, newChildren) {
           }
           UpdateDOM(realChild, oldEntry.vdom, newChild);
         } else {
-          const newElement = createHTML(element, newChild);      
+          const newElement = createHTML(element, newChild);
           if (realChild) {
             element.insertBefore(newElement, realChild);
           } else {
@@ -92,7 +92,7 @@ function updateChildren(element, oldChildren, newChildren) {
         }
       }
     }
-  }); 
+  });
   while (element.childNodes.length > newChildren.length) {
     element.removeChild(element.lastChild);
   }
@@ -107,8 +107,10 @@ function updateAttrs(oldNode, newNode, realElemt) {
     else realElemt.setAttribute(key, value);
   }
   for (const [key, _] of Object.entries(oldNode)) {
+    // console.log(key);
     if (!(key in newNode)) {
-      delete realElemt.attrs[key];
+      realElemt.removeAttribute(key)
+      // delete realElemt.attrs[key];
     }
   }
 }

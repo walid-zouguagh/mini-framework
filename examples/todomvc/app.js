@@ -8,11 +8,11 @@ let editId;
 
 function filter_with_hash(hash, todos) {
   if (hash === "/" || hash === "#/") {
-    return todos;
+    return todos;  // Show all tasks
   } else if (hash === "#/active") {
-    return todos.filter((todo) => !todo.done);
+    return todos.filter((todo) => !todo.done);  // Show active tasks (not completed)
   } else if (hash === "#/completed") {
-    return todos.filter((todo) => todo.done);
+    return todos.filter((todo) => todo.done);  // Show completed tasks
   }
   return todos;
 }
@@ -176,7 +176,7 @@ function Header({ todos, setTodos }) {
   );
 }
 
-function Footer({ filter = "all", todos, setTodos }) {
+function Footer({ filter, setFilter, todos, setTodos }) {
   return jsx(
     "footer",
     { class: "footer", "data-testid": "footer" },
@@ -192,6 +192,11 @@ function Footer({ filter = "all", todos, setTodos }) {
           {
             class: filter === "all" ? "selected" : "",
             href: "#/",
+            onclick: (e) => {
+              e.preventDefault()
+              rout.navigate("/#")
+              setFilter("all")
+            }
           },
           "All"
         )
@@ -203,7 +208,12 @@ function Footer({ filter = "all", todos, setTodos }) {
           "a",
           {
             class: filter === "active" ? "selected" : "",
-            href: "#/active",
+            // href: "#/active",
+            onclick: (e) => {
+              e.preventDefault()
+              rout.navigate("/#/active")
+              setFilter("active")
+            }
           },
           "Active"
         )
@@ -215,7 +225,13 @@ function Footer({ filter = "all", todos, setTodos }) {
           "a",
           {
             class: filter === "completed" ? "selected" : "",
-            href: "#/completed",
+            // href: "#/completed",
+            onclick: (e) => {
+              e.preventDefault()
+              rout.navigate("/#/completed")
+
+              setFilter("completed")
+            }
           },
           "Completed"
         )
@@ -233,6 +249,7 @@ function Footer({ filter = "all", todos, setTodos }) {
 }
 
 function MainSection({ todos, setTodos, filter }) {
+
   const showList = filter_with_hash(`#/${filter}`, todos);
   const allCompleted = todos.length > 0 && todos.every((todo) => todo.done);
   // function toggleTodo(id) {
@@ -248,98 +265,102 @@ function MainSection({ todos, setTodos, filter }) {
       "div",
       { class: "toggle-all-container" },
       todos.length > 0 &&
-        jsx("input", {
-          class: "toggle-all",
-          type: "checkbox",
-          id: "toggle-all",
-          "data-testid": "toggle-all",
-          onclick: () => UpdateAll(todos, setTodos),
-          checked: allCompleted,
-        }),
+      jsx("input", {
+        class: "toggle-all",
+        type: "checkbox",
+        id: "toggle-all",
+        "data-testid": "toggle-all",
+        onclick: () => UpdateAll(todos, setTodos),
+        checked: allCompleted,
+      }),
       todos.length > 0 &&
-        jsx(
-          "label",
-          {
-            class: "toggle-all-label",
-            for: "toggle-all",
-            onclick: () => UpdateAll(todos, setTodos),
-          },
-          "Toggle All Input"
-        )
+      jsx(
+        "label",
+        {
+          class: "toggle-all-label",
+          for: "toggle-all",
+          onclick: () => UpdateAll(todos, setTodos),
+        },
+        "Toggle All Input"
+      )
     ),
     todos.length > 0 &&
-      jsx(
-        "ul",
-        { class: "todo-list", "data-testid": "todo-list" },
-        ...showList.map((todo) =>
+    jsx(
+      "ul",
+      { class: "todo-list", "data-testid": "todo-list" },
+      ...showList.map((todo) =>
+        jsx(
+          "li",
+          {
+            class: todo.done ? "completed" : "",
+            "data-testid": "todo-item",
+            "key": todo.id,
+          },
           jsx(
-            "li",
-            {
-              class: todo.done ? "completed" : "",
-              "data-testid": "todo-item",
-              "data-id": todo.id,
-            },
+            "div",
+            { class: "view" },
+            editId !== todo.id &&
+            jsx("input", {
+              ...(todo.done ? { class: "toggle whithsvg" } : { class: "toggle withoutsvg" }),
+              // class: "toggle",
+              type: "checkbox",
+              // type: "checkbox",
+              "data-testid": "todo-item-toggle",
+              ...(todo.done ? { checked: true } : {}),
+              // checked: todo.done,
+              onclick: () => {
+                AddToCommple(todo.id, todos, setTodos);
+              },
+            }),
             jsx(
-              "div",
-              { class: "view" },
-              editId !== todo.id &&
-                jsx("input", {
-                  class: "toggle",
-                  type: todo.done ? "checkbox" : "",
-                  // type: "checkbox",
-                  "data-testid": "todo-item-toggle",
-                  checked: todo.done,
-                  onclick: () => {
-                    AddToCommple(todo.id, todos, setTodos);
-                  },
-                }),
-              jsx(
-                "label",
-                {
-                  "data-testid": "todo-item-label",
-                  ondblclick: () => {
-                    editId = todo.id;
-                    render();
-                  },
-                  contenteditable: editId === todo.id,
-                  onkeydown: (e) => {
-                    if (e.code === "Enter")
-                      // saveEdit(e.target.textContent, todo.id);
-                      saveEdit(e.target.textContent, todo.id, todos, setTodos);
-                  },
-                  onblur: () => {
-                    editId = undefined;
-                    render();
-                  },
-                  ref: (el) => {
-                    if (editId === todo.id) el.focus();
-                  },
+              "label",
+              {
+                "data-testid": "todo-item-label",
+                ondblclick: () => {
+                  editId = todo.id;
+                  render();
                 },
-                todo.text
-              ),
-              editId !== todo.id &&
-                jsx("button", {
-                  class: "destroy",
-                  "data-testid": "todo-item-button",
-                  onclick: () => RemoveToList(todo.id, todos, setTodos),
-                })
-            )
+                contenteditable: editId === todo.id,
+                onkeydown: (e) => {
+                  if (e.code === "Enter")
+                    // saveEdit(e.target.textContent, todo.id);
+                    saveEdit(e.target.textContent, todo.id, todos, setTodos);
+                },
+                onblur: () => {
+                  editId = undefined;
+                  render();
+                },
+                ref: (el) => {
+                  if (editId === todo.id) el.focus();
+                },
+              },
+              todo.text
+            ),
+            editId !== todo.id &&
+            jsx("button", {
+              class: "destroy",
+              "data-testid": "todo-item-button",
+              onclick: () => RemoveToList(todo.id, todos, setTodos),
+            })
           )
         )
       )
+    )
   );
 }
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [filter, setFilter] = useState("all")
+
   todoList = todos;
-  const hash = window.location.hash;
-  const filter =
-    hash === "#/active"
-      ? "active"
-      : hash === "#/completed"
-      ? "completed"
-      : "all";
+  // const hash = window.location.hash;
+  // setFilter(
+  //   hash === "#/active"
+  //     ? "active"
+  //     : hash === "#/completed"
+  //       ? "completed"
+  //       : "all")
   return jsx(
     "div",
     null,
@@ -348,7 +369,7 @@ function App() {
       { class: "todoapp", id: "root" },
       jsx(Header, { todos, setTodos }),
       jsx(MainSection, { todos, setTodos, filter }),
-      todos.length > 0 && jsx(Footer, { filter, todos, setTodos })
+      todos.length > 0 && jsx(Footer, { filter, setFilter, todos, setTodos })
     ),
     jsx(FooterInfo)
   );
@@ -356,7 +377,3 @@ function App() {
 
 rout.addrout("/", App);
 rout.handleRouteChange();
-
-window.addEventListener("hashchange", () => {
-  render(App);
-});

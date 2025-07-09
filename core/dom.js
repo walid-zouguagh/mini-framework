@@ -14,6 +14,7 @@ export function createHTML(elment = root, Vdom) {
 
   // Appliquer les attributs
   for (const [key, value] of Object.entries(Vdom.attrs)) { // [[id: "1"], [class: "class1"], [onclick: functon(){}] ]
+    // if (key === "") continue
     if (typeof value === "function" && key.startsWith("on")) el[key] = value;
     else el.setAttribute(key, value);
   }
