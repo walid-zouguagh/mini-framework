@@ -21,42 +21,12 @@ function lengthTodo() {
   return todoList.filter((todo) => !todo.done).length;
 }
 
-function TodoActive() {
-  return todoList.some((todo) => !todo.done);
-}
-
-// function UpdateAll() {
-//   let done = TodoActive();
-//   todoList = todoList.map((todo) => ({
-//     text: todo.text,
-//     id: todo.id,
-//     done,
-//   }));
-//   render();
-// }
-
 function UpdateAll(todos, setTodos) {
   const done = todos.some((todo) => !todo.done);
   const updated = todos.map((todo) => ({ ...todo, done }));
   setTodos(updated);
 }
 
-// const saveEdit = (newText, id) => {
-//   if (newText.trim().length <= 1) return;
-//   todoList = todoList.map((todo) =>
-//     todo.id === id ? { ...todo, text: newText } : todo
-//   );
-//   editId = undefined;
-//   render();
-// };
-// const saveEdit = (newText, id, todos, setTodos) => {
-//   if (newText.trim().length <= 1) return;
-//   const updated = todos.map((todo) =>
-//     todo.id === id ? { ...todo, text: newText } : todo
-//   );
-//   editId = undefined;
-//   setTodos(updated);
-// };
 
 const saveEdit = (newText, id, todos, setTodos) => {
   if (newText.trim().length <= 1) return;
@@ -67,10 +37,7 @@ const saveEdit = (newText, id, todos, setTodos) => {
   setTodos(updated);
 };
 
-// const SetNewTodoList = (text, done = false, id = new Date()) => {
-//   todoList.push({ text, done, id: id.getTime() });
-//   render();
-// };
+
 
 const SetNewTodoList = (text, todos, setTodos, done = false) => {
   const newTodo = {
@@ -81,30 +48,14 @@ const SetNewTodoList = (text, todos, setTodos, done = false) => {
   setTodos([...todos, newTodo]);
 };
 
-// const RemoveToList = (id) => {
-//   todoList = todoList.filter((todo) => todo.id !== id);
-//   console.log("after", todoList);
 
-//   render();
-// };
 const RemoveToList = (id, todos, setTodos) => {
   setTodos(todos.filter((todo) => todo.id !== id));
 };
 
-// function clearCompleted() {
-//   todoList = todoList.filter((todo) => !todo.done);
-//   render();
-// }
 function clearCompleted(todos, setTodos) {
   setTodos(todos.filter((todo) => !todo.done));
 }
-
-// const AddToCommple = (id) => {
-//   todoList = todoList.map((todo) =>
-//     todo.id === id ? { ...todo, done: !todo.done } : todo
-//   );
-//   render();
-// };
 
 const AddToCommple = (id, todos, setTodos) => {
   const updated = todos.map((todo) =>
@@ -124,7 +75,6 @@ function FooterInfo() {
 }
 
 function Header({ todos, setTodos }) {
-  // const [test, setTest] = useState("test");
   return jsx(
     "header",
     { class: "header", "data-testid": "header" },
@@ -140,15 +90,6 @@ function Header({ todos, setTodos }) {
         placeholder: "What needs to be done?",
         onkeydown: (e) => {
           if (e.code === "Enter" && e.target.value.trim().length > 1) {
-            // let newText = [...text, e.target.value.trim()];
-            // function updatevalue() {
-            //   if (!text) return [e.target.value.trim()];
-            //   else return [...text, e.target.value.trim()];
-            // }
-            // setText(updatevalue);
-            // // setTest(e.target.value.trim());
-
-            // SetNewTodoList(e.target.value.trim(), false);
 
             function updatevalue() {
               if (!todos) return [e.target.value.trim()];
@@ -208,7 +149,6 @@ function Footer({ filter, setFilter, todos, setTodos }) {
           "a",
           {
             class: filter === "active" ? "selected" : "",
-            // href: "#/active",
             onclick: (e) => {
               e.preventDefault()
               rout.navigate("/#/active")
@@ -225,7 +165,6 @@ function Footer({ filter, setFilter, todos, setTodos }) {
           "a",
           {
             class: filter === "completed" ? "selected" : "",
-            // href: "#/completed",
             onclick: (e) => {
               e.preventDefault()
               rout.navigate("/#/completed")
@@ -252,12 +191,6 @@ function MainSection({ todos, setTodos, filter }) {
 
   const showList = filter_with_hash(`#/${filter}`, todos);
   const allCompleted = todos.length > 0 && todos.every((todo) => todo.done);
-  // function toggleTodo(id) {
-  //   const updated = todos.map((todo) =>
-  //     todo.id === id ? { ...todo, done: !todo.done } : todo
-  //   );
-  //   setTodos(updated);
-  // }
   return jsx(
     "main",
     { class: "main", "data-testid": "main" },
@@ -302,12 +235,9 @@ function MainSection({ todos, setTodos, filter }) {
             editId !== todo.id &&
             jsx("input", {
               ...(todo.done ? { class: "toggle whithsvg" } : { class: "toggle withoutsvg" }),
-              // class: "toggle",
               type: "checkbox",
-              // type: "checkbox",
               "data-testid": "todo-item-toggle",
               ...(todo.done ? { checked: true } : {}),
-              // checked: todo.done,
               onclick: () => {
                 AddToCommple(todo.id, todos, setTodos);
               },
@@ -323,7 +253,6 @@ function MainSection({ todos, setTodos, filter }) {
                 contenteditable: editId === todo.id,
                 onkeydown: (e) => {
                   if (e.code === "Enter")
-                    // saveEdit(e.target.textContent, todo.id);
                     saveEdit(e.target.textContent, todo.id, todos, setTodos);
                 },
                 onblur: () => {
@@ -354,13 +283,6 @@ function App() {
   const [filter, setFilter] = useState("all")
 
   todoList = todos;
-  // const hash = window.location.hash;
-  // setFilter(
-  //   hash === "#/active"
-  //     ? "active"
-  //     : hash === "#/completed"
-  //       ? "completed"
-  //       : "all")
   return jsx(
     "div",
     null,
