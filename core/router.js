@@ -1,10 +1,11 @@
 import { root } from "./dom.js";
+import NotFound from "./notfound.js";
 import { currentVdom, updateVdom } from "./render.js";
 import { UpdateDOM } from "./Vdom/diffing.js";
 
 export class Router {
   constructor() {
-    this.routers = {};
+    this.routers = { "/notfound": NotFound };
     this.currentPath = window.location.pathname;
     window.addEventListener("popstate", () => this.handleRouteChange());
   }
@@ -17,10 +18,13 @@ export class Router {
     const path = window.location.pathname;
 
     if (this.routers[path]) {
-      const Vdom = this.routers[path](); 
+      const Vdom = this.routers[path]();
       UpdateDOM(root.children[0], currentVdom, Vdom);
       updateVdom(Vdom);
+    } else {
+      this.navigate("/notfound");
     }
+
     this.currentPath = path;
   }
 

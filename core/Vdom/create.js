@@ -1,5 +1,4 @@
 export function htmlToObject(element) {
-  console.log("-----------------", element);
 
   if (
     element.nodeType === Node.TEXT_NODE &&

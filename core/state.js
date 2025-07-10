@@ -9,15 +9,12 @@ export function resetStateIndex() {
 
 export function useState(initialValue) {
   const currentIndex = stateIndex;
-  console.log("currentIndex", currentIndex);
   
   if (states[currentIndex] === undefined) {
     states[currentIndex] = initialValue;
   }
 
   function setState(newValue) {
-    console.log("new value", newValue);
-    console.log("statuss", states);
     if (typeof newValue === "function") states[currentIndex] = newValue();
     else states[currentIndex] = newValue;
     render();
